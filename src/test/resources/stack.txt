@@ -33,6 +33,19 @@ Full thread dump Java HotSpot(TM) 64-Bit Server VM (23.25-b01 mixed mode):
 	at java.lang.ref.Reference$ReferenceHandler.run(Reference.java:133)
 	- locked <0x000000015cf05320> (a java.lang.ref.Reference$Lock)
 
+"RMI TCP Connection(idle)" #1053048 daemon prio=5 os_prio=0 tid=0x00007f07e4007000 nid=0x52b5 waiting on condition [0x00007f02ca4f2000]
+   java.lang.Thread.State: TIMED_WAITING (parking)
+	at sun.misc.Unsafe.park(Native Method)
+	- parking to wait for  <0x00000001523af848> (a java.util.concurrent.SynchronousQueue$TransferStack)
+	at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:215)
+	at java.util.concurrent.SynchronousQueue$TransferStack.awaitFulfill(SynchronousQueue.java:460)
+	at java.util.concurrent.SynchronousQueue$TransferStack.transfer(SynchronousQueue.java:362)
+	at java.util.concurrent.SynchronousQueue.poll(SynchronousQueue.java:941)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1066)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1127)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+
 "main" prio=5 tid=0x00007fda14801000 nid=0x1703 runnable [0x0000000103759000]
    java.lang.Thread.State: RUNNABLE
 	at java.io.FileInputStream.readBytes(Native Method)

@@ -45,6 +45,9 @@ public class TestStackFolder
                 "    at java.lang.Object.wait(Object.java:503)\n" +
                 "    at java.lang.ref.Reference$ReferenceHandler.run(Reference.java:133)\n" +
                 "\n" +
+                "RMI TCP Connection(idle)\n" +
+                "    at java.util.concurrent.ThreadPoolExecutor$Worker.run\n" +
+                "\n" +
                 "main\n" +
                 "    at java.io.FileInputStream.readBytes(Native Method)\n" +
                 "    at java.io.FileInputStream.read(FileInputStream.java:242)\n" +

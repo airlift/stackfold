@@ -24,7 +24,7 @@ import static java.lang.String.format;
 
 public final class StackFolder
 {
-    private static final Pattern THREAD_INFO_PATTERN = Pattern.compile("^\"(.*)\"\\s*(daemon)?\\s*prio=(\\d+)\\s*tid=(\\w+)\\s*nid=(\\w+)\\s*([^\\[]*)(?:\\[([^\\]]*)\\])?$");
+    private static final Pattern THREAD_INFO_PATTERN = Pattern.compile("^\"(.*)\"\\s*(?:#(\\d+))?\\s*(daemon)?\\s*prio=(\\d+)\\s*(?:os_prio=(\\d+))?\\s*tid=(\\w+)\\s*nid=(\\w+)\\s*([^\\[]*)(?:\\[([^\\]]*)\\])?$");
     private static final Pattern STACK_ELEMENT_PATTERN = Pattern.compile("(?:at)?\\s*([^\\(]+)\\.([^\\(]+)(?:\\(([^:]+)(?::(\\d+))?\\))?");
     private static final Pattern WAIT_ON_PATTERN = Pattern.compile("- parking to wait for  <(\\w+)> \\(a (\\S+)\\)");
     private static final Pattern LOCKED_PATTERN = Pattern.compile("- locked <(\\w+)> \\(a (\\S+)\\)");
