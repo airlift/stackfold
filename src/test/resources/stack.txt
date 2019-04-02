@@ -12,6 +12,7 @@ Full thread dump Java HotSpot(TM) 64-Bit Server VM (23.25-b01 mixed mode):
 
 "C2 CompilerThread0" daemon prio=5 tid=0x00007fda14896800 nid=0x5103 waiting on condition [0x0000000000000000]
    java.lang.Thread.State: RUNNABLE
+   No compile task
 
 "Signal Dispatcher" daemon prio=5 tid=0x00007fda14895800 nid=0x5003 runnable [0x0000000000000000]
    java.lang.Thread.State: RUNNABLE

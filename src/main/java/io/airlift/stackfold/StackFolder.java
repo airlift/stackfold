@@ -124,8 +124,9 @@ public final class StackFolder
             while (lineIterator.hasNext()) {
                 line = lineIterator.peek().trim();
 
-                // stop when we see a blank line or the start of the next thread
-                if (line.isEmpty() || THREAD_INFO_PATTERN.matcher(line).matches()) {
+                // stop when we see a blank line or the start of the next thread or if its a compiler thread
+                // compiler thread spits out an extra line that does not fit the pattern in STACK_ELEMENT_PATTERN
+                if (line.isEmpty() || THREAD_INFO_PATTERN.matcher(line).matches() || name.contains("CompilerThread")) {
                     break;
                 }
 
