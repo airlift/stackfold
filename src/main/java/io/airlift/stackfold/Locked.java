@@ -1,6 +1,6 @@
 package io.airlift.stackfold;
 
-import com.google.common.base.Objects;
+import static com.google.common.base.MoreObjects.toStringHelper;
 
 public class Locked
 {
@@ -16,7 +16,7 @@ public class Locked
     @Override
     public String toString()
     {
-        return Objects.toStringHelper(this)
+        return toStringHelper(this)
                 .add("lockId", lockId)
                 .add("type", type)
                 .toString();

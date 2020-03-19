@@ -8,6 +8,7 @@ import javax.annotation.Nullable;
 
 import java.util.List;
 
+import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class Stack
@@ -84,7 +85,7 @@ public class Stack
     @Override
     public String toString()
     {
-        return Objects.toStringHelper(this)
+        return toStringHelper(this)
                 .add("name", name)
                 .add("daemon", daemon)
                 .add("priority", priority)
