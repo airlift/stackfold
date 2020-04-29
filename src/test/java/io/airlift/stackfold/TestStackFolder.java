@@ -64,6 +64,15 @@ public class TestStackFolder
                 "\n");
     }
 
+    @Test
+    public void testThreadMxBeanDump()
+            throws Exception
+    {
+        List<StackFolding> foldings = loadFolding(readResourceLines("folding.txt"));
+        Set<Stack> stacks = loadStackTrace(readResourceLines("thread_mxbean_stack.txt"), foldings);
+        assertEquals(renderStacks(stacks), String.join("\n", readResourceLines("thread_mxbean_stack_folded.txt")));
+    }
+
     private static String renderStacks(Set<Stack> stacks)
     {
         try {

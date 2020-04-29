@@ -24,7 +24,28 @@ import static java.lang.String.format;
 
 public final class StackFolder
 {
-    private static final Pattern THREAD_INFO_PATTERN = Pattern.compile("^\"(.*)\"\\s*(?:#(\\d+))?\\s*(daemon)?\\s*prio=(\\d+)\\s*(?:os_prio=(\\d+))?\\s*tid=(\\w+)\\s*nid=(\\w+)\\s*([^\\[]*)(?:\\[([^\\]]*)\\])?$");
+    /**
+     * Matches thread info as printed by jstack.
+     * <p>
+     * Example
+     * <pre>
+     * "Signal Dispatcher" #2 daemon prio=5 tid=0x00007fda14895800 nid=0x5003 runnable [0x0000000000000000]
+     * </pre>
+     */
+    private static final Pattern JSTACK_THREAD_INFO_PATTERN = Pattern.compile("" +
+            "^\"(?<name>.*)\"\\s*(?:#(\\d+))?\\s*(?<daemon>daemon)?\\s*" +
+            "prio=(?<priority>\\d+)\\s*(?:os_prio=(\\d+))?\\s*tid=(?<threadId>\\w+)\\s*nid=(?<nativeId>\\w+)\\s*(?<stateMessage>[^\\[]*)(?:\\[([^\\]]*)\\])?$");
+
+    /**
+     * Matches thread info as printed by {@link java.lang.management.ThreadMXBean#dumpAllThreads(boolean, boolean)}.
+     * Example
+     * <pre>
+     * "http-worker-560" Id=560 TIMED_WAITING on java.util.concurrent.SynchronousQueue$TransferStack@2a283975
+     * </pre>
+     */
+    private static final Pattern THREAD_MXBEAN_THREAD_INFO_PATTERN = Pattern.compile("" +
+            "^\"(?<name>.*)\"\\s+Id=(?<threadId>\\d+)\\s+(?<stateMessage>.*)$");
+
     private static final Pattern STACK_ELEMENT_PATTERN = Pattern.compile("(?:at)?\\s*([^\\(]+)\\.([^\\(]+)(?:\\(([^:]+)(?::(\\d+))?\\))?");
     private static final Pattern WAIT_ON_PATTERN = Pattern.compile("- parking to wait for  <(\\w+)> \\(a (\\S+)\\)");
     private static final Pattern LOCKED_PATTERN = Pattern.compile("- locked <(\\w+)> \\(a (\\S+)\\)");
@@ -73,15 +94,29 @@ public final class StackFolder
         PeekingIterator<String> lineIterator = peekingIterator(lines.iterator());
         while (lineIterator.hasNext()) {
             String line = lineIterator.next();
-            Matcher matcher = THREAD_INFO_PATTERN.matcher(line);
+            Matcher matcher = JSTACK_THREAD_INFO_PATTERN.matcher(line);
             if (matcher.matches()) {
                 Stack stack = extractStack(
-                        matcher.group(1),
-                        matcher.group(2),
-                        matcher.group(3),
-                        matcher.group(4),
-                        matcher.group(5),
-                        matcher.group(6),
+                        matcher.group("name"),
+                        matcher.group("daemon"),
+                        matcher.group("priority"),
+                        matcher.group("threadId"),
+                        matcher.group("nativeId"),
+                        matcher.group("stateMessage"),
+                        lineIterator,
+                        stackFoldings);
+                builder.add(stack);
+            }
+
+            matcher = THREAD_MXBEAN_THREAD_INFO_PATTERN.matcher(line);
+            if (matcher.matches()) {
+                Stack stack = extractStack(
+                        matcher.group("name"),
+                        null, // daemon
+                        "0", // priority
+                        matcher.group("threadId"),
+                        "x", // nativeId
+                        matcher.group("stateMessage"),
                         lineIterator,
                         stackFoldings);
                 builder.add(stack);
@@ -126,7 +161,10 @@ public final class StackFolder
 
                 // stop when we see a blank line or the start of the next thread or if its a compiler thread
                 // compiler thread spits out an extra line that does not fit the pattern in STACK_ELEMENT_PATTERN
-                if (line.isEmpty() || THREAD_INFO_PATTERN.matcher(line).matches() || name.contains("CompilerThread")) {
+                if (line.isEmpty()
+                        || JSTACK_THREAD_INFO_PATTERN.matcher(line).matches()
+                        || THREAD_MXBEAN_THREAD_INFO_PATTERN.matcher(line).matches()
+                        || name.contains("CompilerThread")) {
                     break;
                 }
 
